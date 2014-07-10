@@ -454,6 +454,7 @@ function Enemy(){
 
             return false;
         } else {
+            game.playerScore += 10;
             return true;
         }
     };
@@ -570,6 +571,8 @@ function Game(){
                 height: this.mainCanvas.height
             });
 
+            this.playerScore = 0;
+
             return true;
         } else {
             return false;
@@ -606,6 +609,9 @@ function animate(){
     game.ship.bulletPool.animate();
     game.enemyPool.animate();
     game.enemyBulletPool.animate();
+
+    // Snow score
+    document.getElementById('score').innerHTML = game.playerScore;
 }
 
 function detectCollision(){
