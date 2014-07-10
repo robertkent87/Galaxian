@@ -311,9 +311,46 @@ function Pool(maxSize){
             }
         }
     };
-
 }
 
+/**
+ * A sound pool to use for the sound effects
+ */
+function SoundPool(maxSize){
+    var size = maxSize;
+    var pool = [];
+    this.pool = pool;
+    var currSound = 0;
+
+    this.init = function (object){
+        if (object == 'laser'){
+            for (var i = 0; i < size; i++){
+                var laser = new Audio('sounds/laser.wav');
+                laser.volume = .12;
+                laser.load();
+                pool[i] = laser;
+            }
+        } else if (object == 'explosion'){
+            for (var i = 0; i < size; i++){
+                var explosion = new Audio('sounds/explosion.wav');
+                explosion.volume = .1;
+                explosion.load();
+                pool[i] = explosion;
+            }
+        }
+    };
+
+    /*
+     * Play a sound
+     */
+    this.get = function (){
+        if (pool[currSound].currentTime == 0 || pool[currSound].ended){
+            pool[currSound].play();
+        }
+
+        currSound = (currSound + 1) % size;
+    };
+}
 
 /**
  * Create the Ship object that the player controls. The ship is
@@ -625,7 +662,7 @@ function detectCollision(){
                 (objects[x].x < obj[y].x + obj[y].width &&
                 objects[x].x + objects[x].width > obj[y].x &&
                 objects[x].y < obj[y].y + obj[y].height &&
-                objects[x].y + objects[x].height > obj[y].y)) {
+                objects[x].y + objects[x].height > obj[y].y)){
                 objects[x].isColliding = true;
                 obj[y].isColliding = true;
             }
