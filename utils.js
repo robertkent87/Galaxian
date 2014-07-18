@@ -420,3 +420,18 @@ function SoundPool(maxSize) {
         currSound = (currSound + 1) % size;
     };
 }
+
+function mute() {
+    // bg music is playing
+    if (game.backgroundAudio.volume !== 0) {
+        game.backgroundAudio.volume = 0;
+    } else {
+        game.backgroundAudio.volume = .7;
+    }
+
+    if (game.gameOverAudio.volume !== 0) {
+        game.gameOverAudio.volume = 0;
+    } else {
+        game.gameOverAudio.volume = .7;
+    }
+}
