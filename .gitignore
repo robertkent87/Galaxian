@@ -1,7 +1,4 @@
 # Ignore paths that contain user-generated content.
 site/uploads
 html/*
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/deployment.xml
-.idea/jsLibraryMappings.xml
+.idea/*
