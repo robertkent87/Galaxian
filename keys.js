@@ -6,42 +6,53 @@ KEY_CODES = {
     38: 'up',
     39: 'right',
     40: 'down'
-};
-
-// Creates the array to hold the KEY_CODES and sets all their values to false.
-// Checking true/false is the quickest way to check status of a key press and
-// which one was pressed when determining when to move and which direction.
-
-KEY_STATUS = {};
-for (code in KEY_CODES) {
-    KEY_STATUS[ KEY_CODES[ code ]] = false;
 }
 
+// Creates the array to hold the KEY_CODES and sets all their values
+// to true. Checking true/flase is the quickest way to check status
+// of a key press and which one was pressed when determining
+// when to move and which direction.
+KEY_STATUS = {};
+for (code in KEY_CODES) {
+    KEY_STATUS[KEY_CODES[code]] = false;
+}
 /**
  * Sets up the document to listen to onkeydown events (fired when
  * any key on the keyboard is pressed down). When a key is pressed,
  * it sets the appropriate direction to true to let us know which
  * key it was.
  */
-document.onkeydown = function(e) {
-    // Firefox and opera use charCode instead of keyCode to return which key was pressed.
+document.onkeydown = function (e) {
+    // Firefox and opera use charCode instead of keyCode to
+    // return which key was pressed.
     var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
     if (KEY_CODES[keyCode]) {
         e.preventDefault();
         KEY_STATUS[KEY_CODES[keyCode]] = true;
     }
-};
-
+}
 /**
- * Sets up the document to listen to onkeyup events (fired when
+ * Sets up the document to listen to ownkeyup events (fired when
  * any key on the keyboard is released). When a key is released,
- * it sets the appropriate direction to false to let us know which
+ * it sets teh appropriate direction to false to let us know which
  * key it was.
  */
-document.onkeyup = function(e) {
+document.onkeyup = function (e) {
     var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
     if (KEY_CODES[keyCode]) {
         e.preventDefault();
         KEY_STATUS[KEY_CODES[keyCode]] = false;
+    }
+}
+
+/*
+ * Other keyboard shortcuts
+ */
+document.onkeypress = function (e) {
+    // only restart game if player is dead
+    if (e.which === 114 && !game.ship.alive) {
+        game.restart();
+    } else if (e.which === 109) {
+        mute();
     }
 };
