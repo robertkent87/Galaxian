@@ -8,18 +8,14 @@ function init() {
     game.init();
 }
 
-/**
- * Creates the Game object which will hold all objects and data for
- * the game.
+/** ====================================================================================================================
+ *  Creates the Game object which will hold all objects and data for the game.
+ *  ====================================================================================================================
  */
 function Game() {
-    /*
-     * Gets canvas information and context and sets up all game
-     * objects.
-     * Returns true if the canvas is supported and false if it
-     * is not. This is to stop the animation script from constantly
-     * running on browsers that do not support the canvas.
-     */
+    // Gets canvas information and context and sets up all game objects.
+    // Returns true if the canvas is supported and false if it is not. This is to stop the animation script from
+    // constantly running on browsers that do not support the canvas.
     this.init = function () {
         this.playerLives = 3;
 
@@ -30,8 +26,7 @@ function Game() {
         this.mainCanvas = document.getElementById('main');
         this.explosionCanvas = document.getElementById('explosions');
 
-        // Test to see if canvas is supported. Only need to
-        // check one canvas
+        // Test to see if canvas is supported. Only need to check one canvas
         if (this.bgCanvas.getContext) {
             this.bgContext = this.bgCanvas.getContext('2d');
             this.starContext = this.starCanvas.getContext('2d');
@@ -39,8 +34,7 @@ function Game() {
             this.mainContext = this.mainCanvas.getContext('2d');
             this.explosionContext = this.explosionCanvas.getContext('2d');
 
-            // Initialize objects to contain their context and canvas
-            // information
+            // Initialize objects to contain their context and canvas information
             Background.prototype.context = this.bgContext;
             Background.prototype.canvasWidth = this.bgCanvas.width;
             Background.prototype.canvasHeight = this.bgCanvas.height;
@@ -57,24 +51,20 @@ function Game() {
             Enemy.prototype.canvasWidth = this.mainCanvas.width;
             Enemy.prototype.canvasHeight = this.mainCanvas.height;
 
-//            Explosion.prototype.context = this.explosionContext;
-//            Explosion.prototype.canvasWidth = this.explosionCanvas.width;
-//            Explosion.prototype.canvasHeight = this.explosionCanvas.height;
-
             // Initialize the background object
             this.background = new Background('background');
-            this.background.init(0, 0); // Set draw point to 0,0
+            this.background.init(0, 0);
 
             this.starfield = new Background('starfield');
-            this.starfield.init(0, 0); // Set draw point to 0,0
+            this.starfield.init(0, 0);
 
             // Initialize the ship object
             this.ship = new Ship();
+
             // Set the ship to start near the bottom middle of the canvas
             this.shipStartX = this.shipCanvas.width / 2 - imageRepository.spaceship.width;
             this.shipStartY = this.shipCanvas.height / 4 * 3 + imageRepository.spaceship.height * 2;
-            this.ship.init(this.shipStartX, this.shipStartY,
-                imageRepository.spaceship.width, imageRepository.spaceship.height);
+            this.ship.init(this.shipStartX, this.shipStartY, imageRepository.spaceship.width, imageRepository.spaceship.height);
 
             // Initialize the enemy pool object
             this.enemyPool = new Pool(30);
@@ -140,7 +130,7 @@ function Game() {
 
     // Restart the game
     this.restart = function (condition) {
-        var condition = condition || "";
+        condition = condition || "";
 
         this.bgContext.clearRect(0, 0, this.bgCanvas.width, this.bgCanvas.height);
         this.starContext.clearRect(0, 0, this.starCanvas.width, this.starCanvas.height);
@@ -180,14 +170,11 @@ function Game() {
     this.gameOver = function () {
         this.backgroundAudio.pause();
         this.gameOverAudio.currentTime = 0;
-//        this.gameOverAudio.play();
         document.getElementById('game-over').style.display = "block";
     };
 }
 
-/**
- * Ensure the game sound has loaded before starting the game
- */
+// Ensure the game sound has loaded before starting the game
 function checkReadyState() {
     if (game.gameOverAudio.readyState === 4 && game.backgroundAudio.readyState === 4) {
         window.clearInterval(game.checkAudio);
@@ -196,11 +183,10 @@ function checkReadyState() {
     }
 }
 
-/**
- * The animation loop. Calls the requestAnimationFrame shim to
- * optimize the game loop and draws all game objects. This
- * function must be a gobal function and cannot be within an
- * object.
+/** ====================================================================================================================
+ *  The animation loop. Calls the requestAnimationFrame shim to optimize the game loop and draws all game objects.
+ *  This function must be a global function and cannot be within an object.
+ *  ====================================================================================================================
  */
 function animate() {
     document.getElementById('score').innerHTML = game.playerScore;
