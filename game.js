@@ -88,7 +88,7 @@ function Game(){
             this.explosion = new SoundPool(20);
             this.explosion.init("explosion");
 
-            this.backgroundAudio = new Audio("sounds/fight-for-justice.mp3");
+            this.backgroundAudio = new Audio("sounds/lunar-harvest.mp3");
             this.backgroundAudio.loop = true;
             this.backgroundAudio.volume = .25;
             this.backgroundAudio.load();
