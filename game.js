@@ -4,7 +4,7 @@
  */
 var game = new Game();
 
-function init() {
+function init(){
     game.init();
 }
 
@@ -12,11 +12,11 @@ function init() {
  *  Creates the Game object which will hold all objects and data for the game.
  *  ====================================================================================================================
  */
-function Game() {
+function Game(){
     // Gets canvas information and context and sets up all game objects.
     // Returns true if the canvas is supported and false if it is not. This is to stop the animation script from
     // constantly running on browsers that do not support the canvas.
-    this.init = function () {
+    this.init = function (){
         this.playerLives = 3;
 
         // Get the canvas elements
@@ -27,7 +27,7 @@ function Game() {
         this.explosionCanvas = document.getElementById('explosions');
 
         // Test to see if canvas is supported. Only need to check one canvas
-        if (this.bgCanvas.getContext) {
+        if (this.bgCanvas.getContext){
             this.bgContext = this.bgCanvas.getContext('2d');
             this.starContext = this.starCanvas.getContext('2d');
             this.shipContext = this.shipCanvas.getContext('2d');
@@ -98,23 +98,23 @@ function Game() {
             this.gameOverAudio.volume = .25;
             this.gameOverAudio.load();
 
-            this.checkAudio = window.setInterval(function () {
+            this.checkAudio = window.setInterval(function (){
                 checkReadyState()
             }, 1000);
         }
     };
 
     // Spawn a new wave of enemies
-    this.spawnWave = function () {
+    this.spawnWave = function (){
         var height = imageRepository.enemy.height;
         var width = imageRepository.enemy.width;
         var x = 100;
         var y = -height;
         var spacer = y * 1.5;
-        for (var i = 1; i <= 18; i++) {
+        for (var i = 1; i <= 18; i++){
             this.enemyPool.get(x, y, 2);
             x += width + 25;
-            if (i % 6 == 0) {
+            if (i % 6 == 0){
                 x = 100;
                 y += spacer
             }
@@ -122,14 +122,14 @@ function Game() {
     };
 
     // Start the animation loop
-    this.start = function () {
+    this.start = function (){
         this.ship.draw();
         this.backgroundAudio.play();
         animate();
     };
 
     // Restart the game
-    this.restart = function (condition) {
+    this.restart = function (condition){
         condition = condition || "";
 
         this.bgContext.clearRect(0, 0, this.bgCanvas.width, this.bgCanvas.height);
@@ -150,7 +150,7 @@ function Game() {
         this.enemyBulletPool.init("enemyBullet");
         this.explosions = [];
 
-        if (condition !== 'continue') {
+        if (condition !== 'continue'){
             document.getElementById('game-over').style.display = "none";
             this.playerScore = 0;
             this.playerLives = 3;
@@ -160,14 +160,14 @@ function Game() {
             this.start();
         }
 
-        for (var i = 1, lives = ''; i <= game.playerLives; i++) {
+        for (var i = 1, lives = ''; i <= game.playerLives; i++){
             lives += '<img src="images/lives.png" />'
         }
         document.getElementById('lives').innerHTML = lives;
     };
 
     // Game over
-    this.gameOver = function () {
+    this.gameOver = function (){
         this.backgroundAudio.pause();
         this.gameOverAudio.currentTime = 0;
         document.getElementById('game-over').style.display = "block";
@@ -175,8 +175,8 @@ function Game() {
 }
 
 // Ensure the game sound has loaded before starting the game
-function checkReadyState() {
-    if (game.gameOverAudio.readyState === 4 && game.backgroundAudio.readyState === 4) {
+function checkReadyState(){
+    if (game.gameOverAudio.readyState === 4 && game.backgroundAudio.readyState === 4){
         window.clearInterval(game.checkAudio);
         document.getElementById('loading').style.display = "none";
         game.start();
@@ -188,7 +188,7 @@ function checkReadyState() {
  *  This function must be a global function and cannot be within an object.
  *  ====================================================================================================================
  */
-function animate() {
+function animate(){
     document.getElementById('score').innerHTML = game.playerScore;
 
     // Insert objects into quadtree
@@ -201,12 +201,12 @@ function animate() {
     detectCollision();
 
     // No more enemies
-    if (game.enemyPool.getPool().length === 0) {
+    if (game.enemyPool.getPool().length === 0){
         game.spawnWave();
     }
 
     // Animate game objects
-    if (game.ship.alive) {
+    if (game.ship.alive){
         requestAnimFrame(animate);
 
         game.background.draw();
@@ -217,9 +217,9 @@ function animate() {
         game.enemyBulletPool.animate();
 
         // Update explosions
-
-            game.explosionContext.clearRect(0, 0, game.explosionCanvas.width, game.explosionCanvas.height);
-        for (var i = 0; i < game.explosions.length; i++) {
+        // TODO: Make this neater
+        game.explosionContext.clearRect(0, 0, game.explosionCanvas.width, game.explosionCanvas.height);
+        for (var i = 0; i < game.explosions.length; i++){
             var explosion = game.explosions[0];
 //            var explosion = game.explosions[i];
 
@@ -227,7 +227,7 @@ function animate() {
             explosion.sprite.update(1);
 
             // Remove if animation is done
-            if (explosion.sprite.done) {
+            if (explosion.sprite.done){
                 game.explosions.splice(i, 1);
                 i--;
             }
@@ -238,21 +238,21 @@ function animate() {
     }
 }
 
-function detectCollision() {
+function detectCollision(){
     var objects = [];
     game.quadTree.getAllObjects(objects);
 
-    for (var x = 0, len = objects.length; x < len; x++) {
+    for (var x = 0, len = objects.length; x < len; x++){
         game.quadTree.findObjects(obj = [], objects[x]);
 
-        for (y = 0, length = obj.length; y < length; y++) {
+        for (y = 0, length = obj.length; y < length; y++){
 
             // DETECT COLLISION ALGORITHM
             if (objects[x].collidableWith === obj[y].type &&
                 (objects[x].x < obj[y].x + obj[y].width &&
-                    objects[x].x + objects[x].width > obj[y].x &&
-                    objects[x].y < obj[y].y + obj[y].height &&
-                    objects[x].y + objects[y].height > obj[y].y)) {
+                objects[x].x + objects[x].width > obj[y].x &&
+                objects[x].y < obj[y].y + obj[y].height &&
+                objects[x].y + objects[y].height > obj[y].y)){
                 objects[x].isColliding = true;
                 obj[y].isColliding = true;
             }
