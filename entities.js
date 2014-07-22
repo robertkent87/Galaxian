@@ -99,7 +99,7 @@ function Bullet(object){
     this.draw = function (){
         this.context.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2);
         this.y -= this.speedY;
-        this.x -= this.speedX;
+        this.x -= -this.speedX;
 
         if (this.isColliding){
             return true;
@@ -218,7 +218,7 @@ function Ship(){
      * Fires two bullets
      */
     this.fire = function (){
-        this.bulletPool.getTwo(this.x + 6, this.y, [0, 5], this.x + 33, this.y, [0, 5]);
+        this.bulletPool.getTwo(this.x + 6, this.y, [-0.1, 5], this.x + 33, this.y, [0.1, 5]);
         game.laser.get();
     };
 
