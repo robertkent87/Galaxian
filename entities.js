@@ -81,7 +81,10 @@ function Bullet(object) {
     this.spawn = function (x, y, speed) {
         this.x = x;
         this.y = y;
-        this.speed = speed;
+
+        this.speedX = speed[0];
+        this.speedY = speed[1];
+
         this.alive = true;
     };
 
@@ -93,7 +96,8 @@ function Bullet(object) {
      */
     this.draw = function () {
         this.context.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2);
-        this.y -= this.speed;
+        this.y -= this.speedY;
+        this.x -= this.speedX;
 
         if (this.isColliding) {            return true;
         }
@@ -121,7 +125,8 @@ function Bullet(object) {
     this.clear = function () {
         this.x = 0;
         this.y = 0;
-        this.speed = 0;
+        this.speedX = 0;
+        this.speedY = 0;
         this.alive = false;
         this.isColliding = false;
     };
@@ -210,8 +215,7 @@ function Ship() {
      * Fires two bullets
      */
     this.fire = function () {
-        this.bulletPool.getTwo(this.x + 6, this.y, 3,
-            this.x + 33, this.y, 3);
+        this.bulletPool.getTwo(this.x + 6, this.y, [0,3], this.x + 33, this.y, [0,3]);
         game.laser.get();
     };
 
@@ -304,7 +308,7 @@ function Enemy() {
      * Fires a bullet
      */
     this.fire = function () {
-        game.enemyBulletPool.get(this.x + this.width / 2, this.y + this.height, -2.5);
+        game.enemyBulletPool.get(this.x + this.width / 2, this.y + this.height, [0,-2.5]);
     };
 
     /*
