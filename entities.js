@@ -142,7 +142,7 @@ Bullet.prototype = new Drawable();
 function Ship() {
     this.speed = 3;
     this.bulletPool = new Pool(30);
-    var fireRate = 15;
+    var fireRate = 10;
     var counter = 0;
     this.collidableWith = "enemyBullet";
     this.type = "ship";
@@ -215,7 +215,7 @@ function Ship() {
      * Fires two bullets
      */
     this.fire = function () {
-        this.bulletPool.getTwo(this.x + 6, this.y, [0,3], this.x + 33, this.y, [0,3]);
+        this.bulletPool.getTwo(this.x + 6, this.y, [0,5], this.x + 33, this.y, [0,5]);
         game.laser.get();
     };
 
