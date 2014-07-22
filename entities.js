@@ -1,16 +1,16 @@
 /**
  * Created by Robert on 18/07/2014.
- * 
+ *
  *  Game entities that need to be drawn/updated
  */
 
 /** ====================================================================================================================
- * Creates the Drawable object which will be the base class for all drawable objects in the game. Sets up default 
+ * Creates the Drawable object which will be the base class for all drawable objects in the game. Sets up default
  * variables that all child objects will inherit, as well as the default functions.
  * ====================================================================================================================
  */
-function Drawable() {
-    this.init = function (x, y, width, height) {
+function Drawable(){
+    this.init = function (x, y, width, height){
         // Defualt variables
         this.x = x;
         this.y = y;
@@ -26,9 +26,11 @@ function Drawable() {
     this.type = "";
 
     // Define abstract function to be implemented in child objects
-    this.draw = function () {};
-    this.move = function () {};
-    this.isCollidableWith = function (object) {
+    this.draw = function (){
+    };
+    this.move = function (){
+    };
+    this.isCollidableWith = function (object){
         return (this.collidableWith === object.type);
     };
 }
@@ -38,19 +40,19 @@ function Drawable() {
  * "background" canvas and creates the illusion of moving by panning the image.
  * =====================================================================================================================
  */
-function Background(object) {
+function Background(object){
     var self = object;
 
-    if (self === 'background') {
+    if (self === 'background'){
         this.speed = 1;
         this.image = imageRepository.background;
-    } else if (self === 'starfield') {
+    } else if (self === 'starfield'){
         this.speed = 2;
         this.image = imageRepository.stars;
     }
 
     // Implement abstract function
-    this.draw = function () {
+    this.draw = function (){
         // Pan background
         this.y += this.speed;
         //this.context.clearRect(0,0, this.canvasWidth, this.canvasHeight);
@@ -60,7 +62,7 @@ function Background(object) {
         this.context.drawImage(this.image, this.x, this.y - this.canvasHeight);
 
         // If the image scrolled off the screen, reset
-        if (this.y >= this.canvasHeight) {
+        if (this.y >= this.canvasHeight){
             this.y = 0;
         }
     };
@@ -72,13 +74,13 @@ Background.prototype = new Drawable();
  * Creates the Bullet object which the ship fires. The bullets are drawn on the "main" canvas.
  *  ====================================================================================================================
  */
-function Bullet(object) {
+function Bullet(object){
     this.alive = false; // Is true if the bullet is currently in use
     var self = object;
     /*
      * Sets the bullet values
      */
-    this.spawn = function (x, y, speed) {
+    this.spawn = function (x, y, speed){
         this.x = x;
         this.y = y;
 
@@ -94,24 +96,25 @@ function Bullet(object) {
      * the bullet is ready to be cleared by the pool, otherwise draws
      * the bullet.
      */
-    this.draw = function () {
+    this.draw = function (){
         this.context.clearRect(this.x - 1, this.y - 1, this.width + 2, this.height + 2);
         this.y -= this.speedY;
         this.x -= this.speedX;
 
-        if (this.isColliding) {            return true;
-        }
-        else if (self === "bullet" && this.y <= 0 - this.height) {
+        if (this.isColliding){
             return true;
         }
-        else if (self === "enemyBullet" && this.y >= this.canvasHeight) {
+        else if (self === "bullet" && this.y <= 0 - this.height){
+            return true;
+        }
+        else if (self === "enemyBullet" && this.y >= this.canvasHeight){
             return true;
         }
         else {
-            if (self === "bullet") {
+            if (self === "bullet"){
                 this.context.drawImage(imageRepository.bullet, this.x, this.y);
             }
-            else if (self === "enemyBullet") {
+            else if (self === "enemyBullet"){
                 this.context.drawImage(imageRepository.enemyBullet, this.x, this.y);
             }
 
@@ -122,7 +125,7 @@ function Bullet(object) {
     /*
      * Resets the bullet values
      */
-    this.clear = function () {
+    this.clear = function (){
         this.x = 0;
         this.y = 0;
         this.speedX = 0;
@@ -139,7 +142,7 @@ Bullet.prototype = new Drawable();
  * move around the screen.
  *  ====================================================================================================================
  */
-function Ship() {
+function Ship(){
     this.speed = 3;
     this.bulletPool = new Pool(30);
     var fireRate = 10;
@@ -147,7 +150,7 @@ function Ship() {
     this.collidableWith = "enemyBullet";
     this.type = "ship";
 
-    this.init = function (x, y, width, height) {
+    this.init = function (x, y, width, height){
         // Defualt variables
         this.x = x;
         this.y = y;
@@ -158,14 +161,14 @@ function Ship() {
         this.bulletPool.init("bullet");
     }
 
-    this.draw = function () {
+    this.draw = function (){
         this.context.drawImage(imageRepository.spaceship, this.x, this.y);
     };
-    this.move = function () {
+    this.move = function (){
         counter++;
         // Determine if the action is move action
         if (KEY_STATUS.left || KEY_STATUS.right ||
-            KEY_STATUS.down || KEY_STATUS.up) {
+            KEY_STATUS.down || KEY_STATUS.up){
             // The ship moved, so erase it's current image so it can
             // be redrawn in it's new location
             this.context.clearRect(this.x, this.y, this.width, this.height);
@@ -173,39 +176,39 @@ function Ship() {
             // Update x and y according to the direction to move and
             // redraw the ship. Change the else if's to if statements
             // to have diagonal movement.
-            if (KEY_STATUS.left) {
+            if (KEY_STATUS.left){
                 this.x -= this.speed
                 // Kep player within the screen
-                if (this.x <= 0) {
+                if (this.x <= 0){
                     this.x = 0;
                 }
-            } else if (KEY_STATUS.right) {
+            } else if (KEY_STATUS.right){
                 this.x += this.speed
-                if (this.x >= this.canvasWidth - this.width) {
+                if (this.x >= this.canvasWidth - this.width){
                     this.x = this.canvasWidth - this.width;
                 }
-            } else if (KEY_STATUS.up) {
+            } else if (KEY_STATUS.up){
                 this.y -= this.speed
-                if (this.y <= this.canvasHeight / 4 * 3) {
+                if (this.y <= this.canvasHeight / 4 * 3){
                     this.y = this.canvasHeight / 4 * 3;
                 }
-            } else if (KEY_STATUS.down) {
+            } else if (KEY_STATUS.down){
                 this.y += this.speed
-                if (this.y >= this.canvasHeight - this.height) {
+                if (this.y >= this.canvasHeight - this.height){
                     this.y = this.canvasHeight - this.height;
                 }
             }
         }
 
         // Redraw the ship
-        if (!this.isColliding) {
+        if (!this.isColliding){
             this.draw();
         }
         else {
             this.hit();
         }
 
-        if (KEY_STATUS.space && counter >= fireRate && !this.isColliding) {
+        if (KEY_STATUS.space && counter >= fireRate && !this.isColliding){
             this.fire();
             counter = 0;
         }
@@ -214,15 +217,15 @@ function Ship() {
     /*
      * Fires two bullets
      */
-    this.fire = function () {
-        this.bulletPool.getTwo(this.x + 6, this.y, [0,5], this.x + 33, this.y, [0,5]);
+    this.fire = function (){
+        this.bulletPool.getTwo(this.x + 6, this.y, [0, 5], this.x + 33, this.y, [0, 5]);
         game.laser.get();
     };
 
-    this.hit = function () {
+    this.hit = function (){
         game.playerLives -= 1;
 
-        if (game.playerLives <= 0) {
+        if (game.playerLives <= 0){
 //            this.context.drawImage(imageRepository.spaceshipDown, this.x, this.y);
             this.alive = false;
             game.gameOver();
@@ -239,7 +242,7 @@ Ship.prototype = new Drawable();
  * Create the Enemy ship object.
  *  ====================================================================================================================
  */
-function Enemy() {
+function Enemy(){
     var percentFire = .01;
     var chance = 0;
     this.alive = false;
@@ -249,7 +252,7 @@ function Enemy() {
     /*
      * Sets the Enemy values
      */
-    this.spawn = function (x, y, speed) {
+    this.spawn = function (x, y, speed){
         this.x = x;
         this.y = y;
         this.speed = speed;
@@ -264,30 +267,30 @@ function Enemy() {
     /*
      * Move the enemy
      */
-    this.draw = function () {
+    this.draw = function (){
         this.context.clearRect(this.x - 1, this.y, this.width + 1, this.height);
 
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.x <= this.leftEdge) {
+        if (this.x <= this.leftEdge){
             this.speedX = this.speed;
         }
-        else if (this.x >= this.rightEdge + this.width) {
+        else if (this.x >= this.rightEdge + this.width){
             this.speedX = -this.speed;
         }
-        else if (this.y >= this.bottomEdge) {
+        else if (this.y >= this.bottomEdge){
             this.speed = 1.5;
             this.speedY = 0;
             this.y -= 5;
             this.speedX = -this.speed;
         }
 
-        if (!this.isColliding) {
+        if (!this.isColliding){
             this.context.drawImage(imageRepository.enemy, this.x, this.y);
 
             // Enemy has a chance to shoot every movement
             chance = Math.floor(Math.random() * 101);
-            if (chance / 100 < percentFire) {
+            if (chance / 100 < percentFire){
                 this.fire();
             }
 
@@ -307,14 +310,14 @@ function Enemy() {
     /*
      * Fires a bullet
      */
-    this.fire = function () {
-        game.enemyBulletPool.get(this.x + this.width / 2, this.y + this.height, [0,-2.5]);
+    this.fire = function (){
+        game.enemyBulletPool.get(this.x + this.width / 2, this.y + this.height, [0, -2.5]);
     };
 
     /*
      * Resets the enemy values
      */
-    this.clear = function () {
+    this.clear = function (){
         this.x = 0;
         this.y = 0;
         this.speed = 0;
